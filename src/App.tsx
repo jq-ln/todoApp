@@ -83,6 +83,13 @@ const App = () => {
       });
   }
 
+  const addTodo = async (todo: any) => {
+    await axios.post(baseUrl + "/todos", todo)
+      .then((_response) => {
+        resetTodos();
+      })
+  }
+
   const resetTodos = async () => {
     await getTodos()
       .then(todos => {
@@ -99,6 +106,17 @@ const App = () => {
     if (event.target.tagName === "FORM" && displayModal) {
       setDisplayModal(false);
     }
+  }
+
+  const handleModalSubmit = (todo: any) => {
+    //const allTodoIds = todos.map((todo: any) => todo.id);
+    //
+    //if (allTodoIds.includes(todo.id)) {
+    //  updateTodo(todo.id, todo);
+    //} else {
+      addTodo(todo);
+    //}
+    setDisplayModal(false);
   }
 
   const pendingTodos: any[] = todos.filter((todo: any) => !todo.completed )
@@ -128,7 +146,7 @@ const App = () => {
             return (<Todo key={todo.id} todo={todo} onUpdate={updateAndReset} />);
           })}
         </div>
-        <Modal display={displayModal} />
+        <Modal display={displayModal} handleSubmit={handleModalSubmit} />
       </div>
     </div>
   )

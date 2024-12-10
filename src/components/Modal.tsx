@@ -1,6 +1,20 @@
-import { useState } from "react";
+import { ChangeEvent, SyntheticEvent, useState } from "react";
 
-const DayOptions = (props: any) => {
+interface ModalFormProps {
+  handleSubmit: (event: SyntheticEvent<Element, Event>) => void;
+  handleChange: (event: ChangeEvent) => void;
+  display: "modal display-block" | "modal display-none";
+}
+
+type ModalListProps = Pick<ModalFormProps, "handleChange">;
+
+
+const twoDigitValue = (num: string) => {
+  return num.length === 1 ? "0" + num : num;
+}
+
+
+const DayOptions = (props: ModalListProps) => {
   const days = [];
 
   for (let day = 1; day <= 31; day++) {
@@ -11,15 +25,17 @@ const DayOptions = (props: any) => {
     <select id="due_day" name="day" onChange={props.handleChange}>
       <option>Day</option>
       {days.map(day => {
+        const value = twoDigitValue(day);
+
         return (
-          <option key={"day" + day} value={day}>{day}</option>
+          <option key={"day" + day} value={value}>{day}</option>
         )
       })}
     </select>
   );
 }
 
-const MonthOptions = (props: any) => {
+const MonthOptions = (props: ModalListProps) => {
   const months = ["January", "February", "March",
                   "April",   "May",      "June",
                   "July",    "August",   "September",
@@ -29,15 +45,17 @@ const MonthOptions = (props: any) => {
     <select id="due_month" name="month" onChange={props.handleChange}>
       <option>Month</option>
       {months.map((month, idx) => {
+        const value = twoDigitValue(String(idx + 1))
+
         return (
-          <option key={"month" + (idx + 1)} value={month}>{month}</option>
+          <option key={"month" + (idx + 1)} value={value}>{month}</option>
         );
       })}
     </select>
   );
 }
 
-const YearOptions = (props: any) => {
+const YearOptions = (props: ModalListProps) => {
   const years = ["2020", "2021", "2022", "2023", "2024", "2025"];
 
   return (
@@ -52,7 +70,7 @@ const YearOptions = (props: any) => {
   );
 }
 
-const DueDate = (props: any) => {
+const DueDate = (props: ModalListProps) => {
   return (
     <>
       <label htmlFor="due">Due Date</label>
@@ -67,7 +85,7 @@ const DueDate = (props: any) => {
   );
 }
 
-const Title = (props: any) => {
+const Title = (props: ModalListProps) => {
   return (
     <>
       <label htmlFor="title">Title</label>
@@ -76,7 +94,7 @@ const Title = (props: any) => {
   );
 }
 
-const Description = (props: any) => {
+const Description = (props: ModalListProps) => {
   return (
     <>
       <label htmlFor="description">Description</label>
@@ -92,7 +110,7 @@ const Description = (props: any) => {
   )
 }
 
-const List = (props: any) => {
+const ModalList = (props: ModalListProps) => {
   return (
     <ul>
       <li>
@@ -108,11 +126,11 @@ const List = (props: any) => {
   );
 }
 
-const ModalForm = (props: any) => {
+const ModalForm = (props: ModalFormProps) => {
   return (
     <form className={props.display} action="" method="post" onSubmit={props.handleSubmit}>
       <fieldset className="modal-main">
-        <List handleChange={props.handleChange} />
+        <ModalList handleChange={props.handleChange} />
 
         <div className="modal-buttons">
           <input type="submit" value="Save" />
@@ -130,20 +148,32 @@ export const Modal = (props: any) => {
     month: "",
     year: "",
     description: "",
+    completed: false,
   });
 
   const display = props.display ? "modal display-block" : "modal display-none";
 
-  const handleChange = (event: any) => {
-    const [name, value] = [event.target.name, event.target.value]
-    const updated: any = {};
-    updated[name] = value;
-    setFormData({...formData, ...updated});
+  const handleChange = (event: ChangeEvent) => {
+    const target = event.target;
+
+    if ("name" in target                 &&
+        typeof target.name === "string"  &&
+        "value" in target                &&
+        typeof target.value === "string"
+       ) {
+      const [name, value] = [target.name, target.value]
+      const updated: any = {};
+      updated[name] = value;
+
+      setFormData({...formData, ...updated});
+    } else {
+      throw new Error("Invalid target type");
+    }
   }
 
-  const handleSubmit = (event: any) => {
+  const handleSubmit = (event: SyntheticEvent<Element, Event>) => {
     event.preventDefault();
-    console.log(formData);
+    props.handleSubmit(formData);
   }
 
   return (
