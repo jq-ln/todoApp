@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Modal } from './components/Modal';
 import axios from 'axios';
 import './App.css';
 
@@ -23,12 +24,12 @@ const dueDate = (todo: any) => {
 //--------------------------------------------------
 
 const Todo = ((props: any) => {
-  const [isChecked, setIsChecked] = useState(props.todo.completed)
+  const [isChecked, setIsChecked] = useState(props.todo.completed);
   const status = props.todo.completed ? "COMPLETED" : "PENDING";
 
   const handleCheck = () => {
     setIsChecked(!isChecked);
-    props.onUpdate(props.todo.id, {completed: !isChecked})
+    props.onUpdate(props.todo.id, {completed: !isChecked});
   }
 
   return (
@@ -44,103 +45,8 @@ const Todo = ((props: any) => {
         <span className="check"></span>
       </label>
     </div>
-  )
-})
-
-const Modal = (props: any) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    day: "",
-    month: "",
-    year: "",
-    description: "",
-  })
-
-  const display = props.display ? "modal display-block" : "modal display-none"
-
-  const days = [];
-  const months = ["January", "February", "March",
-                  "April",   "May",      "June",
-                  "July",    "August",   "September",
-                  "October", "November", "December"];
-
-  const years = ["2020", "2021", "2022", "2023", "2024", "2025"];
-
-  for (let day = 1; day <= 31; day++) {
-    days.push(String(day));
-  }
-
-  const handleChange = (event: any) => {
-    const [name, value] = [event.target.name, event.target.value]
-    const updated = {};
-    updated[name] = value;
-    setFormData({...formData, ...updated});
-  }
-
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    console.log(formData);
-  }
-
-  return (
-    <form className={display} action="" method="post" onSubmit={handleSubmit}>
-      <fieldset className="modal-main">
-        <ul>
-          <li>
-            <label htmlFor="title">Title</label>
-            <input id="title" type="text" name="title" placeholder="Item 1" onChange={handleChange} />
-          </li>
-          <li>
-            <label htmlFor="due">Due Date</label>
-            <div className="date">
-              <select id="due_day" name="day" onChange={handleChange}>
-                <option>Day</option>
-                {days.map(day => {
-                  return (
-                    <option key={"day" + day} value={day}>{day}</option>
-                  )
-                })}
-              </select>
-              /
-              <select id="due_month" name="month" onChange={handleChange}>
-                <option>Month</option>
-                {months.map((month, idx) => {
-                  return (
-                    <option key={"month" + (idx + 1)} value={month}>{month}</option>
-                  )
-                })}
-              </select>
-              /
-              <select id="due_year" name="year" onChange={handleChange}>
-                <option>Year</option>
-                {years.map((year) => {
-                  return (
-                    <option key={"year" + year}>{year}</option>
-                  )
-                })}
-              </select>
-            </div>
-          </li>
-          <li>
-            <label htmlFor="description">Description</label>
-            <textarea
-              cols="40"
-              rows="7"
-              id="description"
-              name="description"
-              placeholder="Description..."
-              onChange={handleChange}
-              ></textarea>
-          </li>
-        </ul>
-        <div className="modal-buttons">
-          <input type="submit" value="Save" />
-          <button name="complete">Mark As Complete</button>
-        </div>
-      </fieldset>
-    </form>
   );
-}
+});
 
 //--------------------------------------------------
 // => MAIN COMPONENT
