@@ -1,0 +1,251 @@
+:root {
+  background-color: #3c3836;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: #83a598;
+  font-size: 1.1em;
+}
+
+.container {
+  display: flex;
+}
+
+.sidebar {
+  border-radius: 12px;
+  width: 270px;
+  height: 100vh;
+  background-color: #282828;
+  color: #a89984;
+  box-sizing: border-box;
+  position: fixed;
+  padding-top: 50px;
+  text-align: right;
+  border: medium double #d5c4a1;
+}
+
+.sidebar a {
+  display: block;
+  color: #a89984;
+  text-decoration: none;
+  padding: 6px;
+  margin-bottom: 8px;
+  transition: background-color 0.3s;
+}
+
+
+dl {
+  padding-right: 45px;
+}
+
+dl.sidebarItem:hover {
+  background-color: #1d2021;
+  cursor: pointer;
+}
+
+dd, dt {
+  display: inline-block;
+}
+
+dd {
+  background-color: #458588;
+  color: #282828;
+  font-size: .8em;
+  padding-left: .3em;
+  padding-right: .3em;
+  border-radius: 40%;
+}
+
+.sidebar header a, .sidebar header {
+  font-size: 1.2em;
+  color: #fbf1c7;
+}
+
+.sidebar header a {
+  font-style: italic ;
+}
+
+.content {
+  flex: 1;
+  box-sizing: border-box;
+  padding: 20px;
+  padding-top: 50px;
+  margin-left: 300px;
+}
+
+div input {
+  margin-right: 20px;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: #458588;
+}
+
+.todo {
+  padding: 5px;
+}
+
+.main {
+  display: block;
+  position: relative;
+  padding-left: 45px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.main input[type=checkbox] {
+  visibility: hidden;
+}
+
+.check {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 23px;
+  width: 22px;
+  background-color: transparent;
+  border: 2px solid #83a598;
+}
+
+.plus {
+  --b: 3px; /* the thickness */
+  margin-left: 9px;
+  margin-right: 25px;
+  width: 18px; /* the size */
+  aspect-ratio: 1;
+  background:
+    conic-gradient(from 90deg at var(--b) var(--b),#3c3836 90deg,#83a598 0) 
+    calc(100% + var(--b)/2) calc(100% + var(--b)/2)/
+    calc(50%  + var(--b))   calc(50%  + var(--b));
+  display: inline-block;
+}
+
+.todo:hover {
+  background-color: #282828;
+}
+
+.main input:active~.check {
+  background-color: red;
+}
+
+.main input:checked~.check {
+  border-color: #458588;
+}
+
+.check::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 8px;
+  top: 2px;
+  width: 5px;
+  height: 13px;
+  border: solid #458588;
+  border-width: 0 2px 2px 0;
+  transform: rotate(40deg);
+}
+
+.main input:checked~.check::after {
+  display: block;
+}
+
+tr {
+  border: solid;
+}
+
+.add {
+  font-size: 22px;
+}
+
+.add a {
+  text-decoration: none;
+  color: #83a598;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(29, 32, 33, 0.5);
+}
+
+.modal-main {
+  position: fixed;
+  background-color: #282828;
+  width: 900px;
+  height: auto;
+  border: medium double #d5c4a1;
+  border-radius: 12px;
+  padding: 40px;
+  top: 400px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.display-block {
+  display: block;
+}
+
+.display-none {
+  display: none;
+}
+
+form {
+  font-size: 24px;
+}
+
+form input, form select, textarea, form button {
+  background-color: #d5c4a1;
+  border-color: #d5c4a1;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 26px;
+  display: border-box;
+  border-radius: 5px;
+  font-size: 18px;
+}
+
+.modal-buttons input, .modal-buttons button {
+  width: 245px;
+  height: 50px;
+}
+
+.modal-buttons {
+  margin-left: 279px;
+}
+
+li select {
+  float: none;
+  width: 151px;
+}
+
+li input {
+  width: 500px;
+}
+
+li input:focus, textarea:focus {
+  outline: none !important;
+  border: 2px solid #458588;
+  box-shadow: 0 0 5px #458588;
+}
+
+li label {
+  float: left;
+  width: 110px;
+  padding-left: 30px;
+  margin-right: 100px;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+}
+
+form li {
+  display: block;
+}
