@@ -90,6 +90,7 @@ div input {
 
 .main {
   display: block;
+  display: inline;
   position: relative;
   padding-left: 45px;
   cursor: pointer;
@@ -248,4 +249,8 @@ ul {
 
 form li {
   display: block;
+}
+
+.todo label {
+  cursor: pointer;
 }

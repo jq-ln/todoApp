@@ -32,10 +32,13 @@ const Todo = ((props: any) => {
     props.onUpdate(props.todo.id, {completed: !isChecked});
   }
 
+  // Wrote CSS for custom checkbox --
+  // moved label so it is independently clickable --
+  // checkbox does not work if `label` tag is changed --
+  // Have not found solution
   return (
     <div className="todo" >
       <label className="main">
-        <em>{status}</em> -- {props.todo.title} -- {dueDate(props.todo)} 
         <input
           type="checkbox"
           defaultChecked={isChecked}
@@ -43,6 +46,9 @@ const Todo = ((props: any) => {
           onChange={handleCheck}
         />
         <span className="check"></span>
+      </label>
+      <label onClick={() => props.handleClick(props.todo)}>
+        <em >{status}</em> -- {props.todo.title} -- {dueDate(props.todo)} 
       </label>
     </div>
   );
@@ -53,9 +59,19 @@ const Todo = ((props: any) => {
 //--------------------------------------------------
 
 const App = () => {
+  const emptyFormData = {
+    title: "",
+    day: "",
+    month: "",
+    year: "",
+    description: "",
+    completed: false,
+  }
+
   const [todos, setTodos] = useState([])
   const [header, setHeader] = useState('All Todos')
   const [displayModal, setDisplayModal] = useState(false);
+  const [formData, setFormData] = useState(emptyFormData)
 
   useEffect(() => {
     (async () => {
@@ -119,6 +135,11 @@ const App = () => {
     setDisplayModal(false);
   }
 
+  const handleTodoClick = (todo: any) => {
+    setFormData(todo);
+    setDisplayModal(true);
+  }
+
   const pendingTodos: any[] = todos.filter((todo: any) => !todo.completed )
   const completedTodos: any[] = todos.filter((todo: any) => todo.completed);
   const allTodos: any[] = pendingTodos.concat(completedTodos);
@@ -135,7 +156,7 @@ const App = () => {
       <div className="content" onClick={handleModalClick}>
         <h1>{header}:</h1>
         <div className="add">
-          <a href="#" onClick={() => setDisplayModal(true)}>
+          <a href="#" onClick={() => handleTodoClick(emptyFormData)}>
             <span className="plus"></span>
             Add New Todo
           </a>
@@ -143,10 +164,10 @@ const App = () => {
         </div>
         <div className="todos">
           {allTodos.map((todo: any) => {
-            return (<Todo key={todo.id} todo={todo} onUpdate={updateAndReset} />);
+            return (<Todo key={todo.id} todo={todo} handleClick={handleTodoClick} onUpdate={updateAndReset} />);
           })}
         </div>
-        <Modal display={displayModal} handleSubmit={handleModalSubmit} />
+        {displayModal && <Modal display={displayModal} formData={formData} handleSubmit={handleModalSubmit} />}
       </div>
     </div>
   )

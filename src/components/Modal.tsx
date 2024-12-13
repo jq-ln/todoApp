@@ -1,9 +1,9 @@
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 
 interface ModalFormProps {
+  display: "modal display-block" | "modal display-none";
   handleSubmit: (event: SyntheticEvent<Element, Event>) => void;
   handleChange: (event: ChangeEvent) => void;
-  display: "modal display-block" | "modal display-none";
 }
 
 type ModalListProps = Pick<ModalFormProps, "handleChange">;
@@ -14,7 +14,7 @@ const twoDigitValue = (num: string) => {
 }
 
 
-const DayOptions = (props: ModalListProps) => {
+const DayOptions = (props: any) => {
   const days = [];
 
   for (let day = 1; day <= 31; day++) {
@@ -28,14 +28,14 @@ const DayOptions = (props: ModalListProps) => {
         const value = twoDigitValue(day);
 
         return (
-          <option key={"day" + day} value={value}>{day}</option>
+          <option key={"day" + day} value={value} selected={day === props.day}>{day}</option>
         )
       })}
     </select>
   );
 }
 
-const MonthOptions = (props: ModalListProps) => {
+const MonthOptions = (props: any) => {
   const months = ["January", "February", "March",
                   "April",   "May",      "June",
                   "July",    "August",   "September",
@@ -48,14 +48,14 @@ const MonthOptions = (props: ModalListProps) => {
         const value = twoDigitValue(String(idx + 1))
 
         return (
-          <option key={"month" + (idx + 1)} value={value}>{month}</option>
+          <option key={"month" + (idx + 1)} value={value} selected={value === props.month}>{month}</option>
         );
       })}
     </select>
   );
 }
 
-const YearOptions = (props: ModalListProps) => {
+const YearOptions = (props: any) => {
   const years = ["2020", "2021", "2022", "2023", "2024", "2025"];
 
   return (
@@ -63,38 +63,38 @@ const YearOptions = (props: ModalListProps) => {
       <option>Year</option>
       {years.map((year) => {
         return (
-          <option key={"year" + year}>{year}</option>
+          <option key={"year" + year} selected={year === props.year}>{year}</option>
         )
       })}
     </select>
   );
 }
 
-const DueDate = (props: ModalListProps) => {
+const DueDate = (props: any) => {
   return (
     <>
       <label htmlFor="due">Due Date</label>
       <div className="date">
-        <DayOptions handleChange={props.handleChange} />
+        <DayOptions day={props.date.day} handleChange={props.handleChange} />
         /
-        <MonthOptions handleChange={props.handleChange} />
+        <MonthOptions month={props.date.month} handleChange={props.handleChange} />
         /
-        <YearOptions handleChange={props.handleChange} />
+        <YearOptions year={props.date.year} handleChange={props.handleChange} />
       </div>
     </>
   );
 }
 
-const Title = (props: ModalListProps) => {
+const Title = (props: any) => {
   return (
     <>
       <label htmlFor="title">Title</label>
-      <input id="title" type="text" name="title" placeholder="Item 1" onChange={props.handleChange} />
+      <input id="title" type="text" name="title" placeholder={"Item 1"} value={props.title} onChange={props.handleChange} />
     </>
   );
 }
 
-const Description = (props: ModalListProps) => {
+const Description = (props: any) => {
   return (
     <>
       <label htmlFor="description">Description</label>
@@ -105,32 +105,33 @@ const Description = (props: ModalListProps) => {
         name="description"
         placeholder="Description..."
         onChange={props.handleChange}
+        value={props.description}
         ></textarea>
     </>
   )
 }
 
-const ModalList = (props: ModalListProps) => {
+const ModalList = (props: any) => {
   return (
     <ul>
       <li>
-        <Title handleChange={props.handleChange} />
+        <Title title={props.data.title} handleChange={props.handleChange} />
       </li>
       <li>
-        <DueDate handleChange={props.handleChange} />
+        <DueDate date={{day: props.data.day, month: props.data.month, year: props.data.year}} handleChange={props.handleChange} />
       </li>
       <li>
-        <Description handleChange={props.handleChange} />
+        <Description description={props.data.description} handleChange={props.handleChange} />
       </li>
     </ul>
   );
 }
 
-const ModalForm = (props: ModalFormProps) => {
+const ModalForm = (props: any) => {
   return (
     <form className={props.display} action="" method="post" onSubmit={props.handleSubmit}>
       <fieldset className="modal-main">
-        <ModalList handleChange={props.handleChange} />
+        <ModalList data={props.data} handleChange={props.handleChange} />
 
         <div className="modal-buttons">
           <input type="submit" value="Save" />
@@ -142,16 +143,8 @@ const ModalForm = (props: ModalFormProps) => {
 }
 
 export const Modal = (props: any) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    day: "",
-    month: "",
-    year: "",
-    description: "",
-    completed: false,
-  });
-
-  const display = props.display ? "modal display-block" : "modal display-none";
+  const [formData, setFormData] = useState(props.formData);
+  console.log(formData);
 
   const handleChange = (event: ChangeEvent) => {
     const target = event.target;
@@ -173,12 +166,21 @@ export const Modal = (props: any) => {
 
   const handleSubmit = (event: SyntheticEvent<Element, Event>) => {
     event.preventDefault();
-    props.handleSubmit(formData);
+    if (formData.title && formData.title.length >= 3) {
+      props.handleSubmit(formData);
+    } else {
+      alert("You must enter a title at least three characters long");
+    }
   }
 
   return (
     <div>
-      <ModalForm handleSubmit={handleSubmit} handleChange={handleChange} display={display} />
+      <ModalForm
+        data={formData}
+        display={props.display ? "modal display-block" : "modal display-none"}
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+      />
     </div>
   );
 }
