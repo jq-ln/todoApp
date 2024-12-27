@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { Modal } from './components/Modal';
 import { Todo } from './components/Todo';
 import { FormDataType, TodoType } from './types';
@@ -50,7 +50,7 @@ const App = () => {
   }
 
   // Problem with tsserver -- type of `event` set via suggestion, but `cannot find name` error
-  const handleModalClick = (event: MouseEventHandler<HTMLDivElement>) => {
+  const handleModalClick = (event: SyntheticEvent) => {
     if (
       event.target                    &&
       'tagName' in event.target       &&
