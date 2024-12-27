@@ -3,5 +3,12 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "target": "es2024",
+    "strict": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src/**/*"]
 }

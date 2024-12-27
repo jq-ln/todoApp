@@ -22,13 +22,13 @@ const DayOptions = (props: any) => {
   }
 
   return (
-    <select id="due_day" name="day" onChange={props.handleChange}>
-      <option>Day</option>
+    <select value={props.day} id="due_day" name="day" onChange={props.handleChange}>
+      <option value="DD">Day</option>
       {days.map(day => {
         const value = twoDigitValue(day);
 
         return (
-          <option key={"day" + day} value={value} selected={day === props.day}>{day}</option>
+          <option key={"day" + day} value={value}>{day}</option>
         )
       })}
     </select>
@@ -42,13 +42,13 @@ const MonthOptions = (props: any) => {
                   "October", "November", "December"];
 
   return (
-    <select id="due_month" name="month" onChange={props.handleChange}>
-      <option>Month</option>
+    <select value={props.month} id="due_month" name="month" onChange={props.handleChange}>
+      <option value="MM">Month</option>
       {months.map((month, idx) => {
         const value = twoDigitValue(String(idx + 1))
 
         return (
-          <option key={"month" + (idx + 1)} value={value} selected={value === props.month}>{month}</option>
+          <option key={"month" + (idx + 1)} value={value}>{month}</option>
         );
       })}
     </select>
@@ -59,11 +59,11 @@ const YearOptions = (props: any) => {
   const years = ["2020", "2021", "2022", "2023", "2024", "2025"];
 
   return (
-    <select id="due_year" name="year" onChange={props.handleChange}>
-      <option>Year</option>
+    <select value={props.year} id="due_year" name="year" onChange={props.handleChange}>
+      <option value="YYYY">Year</option>
       {years.map((year) => {
         return (
-          <option key={"year" + year} selected={year === props.year}>{year}</option>
+          <option key={"year" + year}>{year}</option>
         )
       })}
     </select>
@@ -144,7 +144,6 @@ const ModalForm = (props: any) => {
 
 export const Modal = (props: any) => {
   const [formData, setFormData] = useState(props.formData);
-  console.log(formData);
 
   const handleChange = (event: ChangeEvent) => {
     const target = event.target;

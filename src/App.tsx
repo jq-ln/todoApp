@@ -1,62 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Modal } from './components/Modal';
-import axios from 'axios';
+import { Todo } from './components/Todo';
+import { FormDataType, TodoType } from './types';
+import { getTodos, updateTodo, addTodo } from './services/todo';
 import './App.css';
-
-//--------------------------------------------------
-// => HELPER FUNCTIONS
-//--------------------------------------------------
-
-const dueDate = (todo: any) => {
-  if (todo.month && todo.year) {
-    return todo.month + "/" + todo.year.slice(-2);
-  }
-
-  return "No Due Date";
-}
-
-//--------------------------------------------------
-// => INTERFACES AND TYPES
-//--------------------------------------------------
-
-//--------------------------------------------------
-// => CHILD COMPONENTS
-//--------------------------------------------------
-
-const Todo = ((props: any) => {
-  const [isChecked, setIsChecked] = useState(props.todo.completed);
-  const status = props.todo.completed ? "COMPLETED" : "PENDING";
-
-  const handleCheck = () => {
-    setIsChecked(!isChecked);
-    props.onUpdate(props.todo.id, {completed: !isChecked});
-  }
-
-  // Wrote CSS for custom checkbox --
-  // moved label so it is independently clickable --
-  // checkbox does not work if `label` tag is changed --
-  // Have not found solution
-  return (
-    <div className="todo" >
-      <label className="main">
-        <input
-          type="checkbox"
-          defaultChecked={isChecked}
-          id={props.todo.id}
-          onChange={handleCheck}
-        />
-        <span className="check"></span>
-      </label>
-      <label onClick={() => props.handleClick(props.todo)}>
-        <em >{status}</em> -- {props.todo.title} -- {dueDate(props.todo)} 
-      </label>
-    </div>
-  );
-});
-
-//--------------------------------------------------
-// => MAIN COMPONENT
-//--------------------------------------------------
 
 const App = () => {
   const emptyFormData = {
@@ -68,10 +15,10 @@ const App = () => {
     completed: false,
   }
 
-  const [todos, setTodos] = useState([])
-  const [header, setHeader] = useState('All Todos')
-  const [displayModal, setDisplayModal] = useState(false);
-  const [formData, setFormData] = useState(emptyFormData)
+  const [todos, setTodos] = useState<TodoType[]>([])
+  const [header, _setHeader] = useState<string>('All Todos')
+  const [displayModal, setDisplayModal] = useState<boolean>(false);
+  const [formData, setFormData] = useState<FormDataType>(emptyFormData)
 
   useEffect(() => {
     (async () => {
@@ -83,29 +30,6 @@ const App = () => {
   // => HELPER FUNCTIONS
   //------------------------------------------------
 
-  const baseUrl = "http://localhost:3000/api"
-
-  const getTodos = async () => {
-    return await axios.get(baseUrl + "/todos")
-      .then((response) => {
-        return response.data;
-    })
-  }
-
-  const updateTodo = async (id: string, updateValues: any) => {
-    return await axios.put(baseUrl + "/todos/" + id, updateValues)
-      .then(response => {
-        return response.data;
-      });
-  }
-
-  const addTodo = async (todo: any) => {
-    await axios.post(baseUrl + "/todos", todo)
-      .then((_response) => {
-        resetTodos();
-      })
-  }
-
   const resetTodos = async () => {
     await getTodos()
       .then(todos => {
@@ -113,36 +37,49 @@ const App = () => {
       });
   }
 
-  const updateAndReset = async (todo: any, updateValues: any) => {
-    await updateTodo(todo, updateValues)
+  const addAndReset = async (todo: TodoType) => {
+    addTodo(todo)
+      .then(() => {
+        resetTodos();
+      });
+  }
+
+  const updateAndReset = async (id: number, updateValues: Partial<FormDataType>) => {
+    await updateTodo(id, updateValues)
       .then(() => resetTodos());
   }
 
-  const handleModalClick = (event: any) => {
-    if (event.target.tagName === "FORM" && displayModal) {
+  // Problem with tsserver -- type of `event` set via suggestion, but `cannot find name` error
+  const handleModalClick = (event: MouseEventHandler<HTMLDivElement>) => {
+    if (
+      event.target                    &&
+      'tagName' in event.target       &&
+      event.target.tagName === "FORM" &&
+      displayModal
+    ) {
       setDisplayModal(false);
     }
   }
 
-  const handleModalSubmit = (todo: any) => {
-    //const allTodoIds = todos.map((todo: any) => todo.id);
-    //
-    //if (allTodoIds.includes(todo.id)) {
-    //  updateTodo(todo.id, todo);
-    //} else {
-      addTodo(todo);
-    //}
+  const handleModalSubmit = (todo: TodoType) => {
+    const allTodoIds = todos.map((todo: TodoType) => todo.id);
+
+    if (allTodoIds.includes(todo.id)) {
+      updateAndReset(todo.id, { ...todo });
+    } else {
+      addAndReset(todo);
+    }
     setDisplayModal(false);
   }
 
-  const handleTodoClick = (todo: any) => {
+  const handleTodoClick = (todo: FormDataType) => {
     setFormData(todo);
     setDisplayModal(true);
   }
 
-  const pendingTodos: any[] = todos.filter((todo: any) => !todo.completed )
-  const completedTodos: any[] = todos.filter((todo: any) => todo.completed);
-  const allTodos: any[] = pendingTodos.concat(completedTodos);
+  const pendingTodos: TodoType[] = todos.filter((todo: any) => !todo.completed )
+  const completedTodos: TodoType[] = todos.filter((todo: any) => todo.completed);
+  const allTodos: TodoType[] = pendingTodos.concat(completedTodos);
 
   //------------------------------------------------
   // => Return
