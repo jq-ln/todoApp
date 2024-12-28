@@ -1,5 +1,5 @@
 import { ModalFormProps } from "../types";
-import { ModalList } from "./Options";
+import { ModalList } from "./ModalList";
 
 export const ModalForm = (props: ModalFormProps) => {
   return (
