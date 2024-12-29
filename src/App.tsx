@@ -91,7 +91,7 @@ const App = () => {
       </div>
 
       <div className="content" onClick={handleModalClick}>
-        <h1>{header}:</h1>
+        <h1>{header} <span className="count">{allTodos.length}</span></h1>
         <div className="add">
           <a href="#" onClick={() => handleTodoClick(emptyFormData)}>
             <span className="plus"></span>

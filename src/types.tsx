@@ -29,7 +29,7 @@ interface IncludesChange {
 export interface ModalProps {
   display: boolean;
   formData: FormDataType;
-  handleSubmit: (todo: FormDataType) => void;
+  handleSubmit: (todo: FormDataType | TodoType) => void;
 }
 
 export interface ModalFormProps extends IncludesChange {
