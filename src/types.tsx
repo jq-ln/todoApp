@@ -38,6 +38,8 @@ export interface ModalFormProps extends IncludesChange {
   handleSubmit: (event: SyntheticEvent<Element, Event>) => void;
 }
 
+export type ModalListProps = Omit<ModalFormProps, "display" | "handleSubmit">;
+
 export interface TitleProps extends IncludesChange {
   title: string;
 }
