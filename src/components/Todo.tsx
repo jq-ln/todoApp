@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { TodoProps } from "../types";
 
-export const Todo = ((props: any) => {
+export const Todo = ((props: TodoProps) => {
   const [isChecked, setIsChecked] = useState(props.todo.completed);
   const status = props.todo.completed ? "COMPLETED" : "PENDING";
 
@@ -32,7 +33,7 @@ export const Todo = ((props: any) => {
         <input
           type="checkbox"
           defaultChecked={isChecked}
-          id={props.todo.id}
+          id={String(props.todo.id)}
           onChange={handleCheck}
         />
         <span className="check"></span>

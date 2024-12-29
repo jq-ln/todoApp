@@ -4,7 +4,6 @@ import { Description } from "./Description";
 import { ModalListProps } from "../types";
 
 export const ModalList = (props: ModalListProps) => {
-  console.log("ModalList props:", props)
   return (
     <ul>
       <li>
