@@ -19,10 +19,13 @@ export const Todo = ((props: TodoProps) => {
     return "No Due Date";
   }
 
-
   const handleCheck = () => {
     setIsChecked(!isChecked);
     props.onUpdate(props.todo.id, {completed: !isChecked});
+  }
+
+  const onDelete = () => {
+    props.onDelete(props.todo.id);
   }
 
   // Multiple `label` elements due to CSS structure
@@ -41,6 +44,7 @@ export const Todo = ((props: TodoProps) => {
       <label onClick={() => props.handleClick(props.todo)}>
         <em >{status}</em> -- {props.todo.title} -- {dueDate(props.todo)} 
       </label>
+      <button className="delete" onClick={onDelete}>Delete</button>
     </div>
   );
 });

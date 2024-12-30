@@ -21,3 +21,6 @@ export const addTodo = async (todo: TodoType) => {
   await axios.post(baseUrl + "/todos", todo)
 }
 
+export const deleteTodo = async (id: number) => {
+  await axios.delete(baseUrl + "/todos/" + id);
+}

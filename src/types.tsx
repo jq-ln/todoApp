@@ -64,4 +64,5 @@ export interface TodoProps {
   handleClick: (todo: TodoType) => void;
   onUpdate: (id: number, updateValues: Partial<TodoType>) => void;
   todo: TodoType;
+  onDelete: (id: number) => void;
 }

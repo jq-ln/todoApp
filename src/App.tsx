@@ -2,7 +2,7 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import { Modal } from './components/Modal';
 import { Todo } from './components/Todo';
 import { FormDataType, TodoType } from './types';
-import { getTodos, updateTodo, addTodo } from './services/todo';
+import { getTodos, updateTodo, addTodo, deleteTodo } from './services/todo';
 import './App.css';
 
 const App = () => {
@@ -49,7 +49,6 @@ const App = () => {
       .then(() => resetTodos());
   }
 
-  // Problem with tsserver -- type of `event` set via suggestion, but `cannot find name` error
   const handleModalClick = (event: SyntheticEvent) => {
     if (
       event.target                    &&
@@ -61,7 +60,7 @@ const App = () => {
     }
   }
 
-  const handleModalSubmit = (todo: TodoType) => {
+  const handleModalSubmit = (todo: FormDataType) => {
     const allTodoIds = todos.map((todo: TodoType) => todo.id);
 
     if (allTodoIds.includes(todo.id)) {
@@ -75,6 +74,13 @@ const App = () => {
   const handleTodoClick = (todo: FormDataType) => {
     setFormData(todo);
     setDisplayModal(true);
+  }
+
+  const handleDelete = async (id: number) => {
+    await deleteTodo(id)
+      .then(() => {
+        resetTodos();
+      });
   }
 
   const pendingTodos: TodoType[] = todos.filter((todo: any) => !todo.completed )
@@ -101,7 +107,7 @@ const App = () => {
         </div>
         <div className="todos">
           {allTodos.map((todo: any) => {
-            return (<Todo key={todo.id} todo={todo} handleClick={handleTodoClick} onUpdate={updateAndReset} />);
+            return (<Todo key={todo.id} todo={todo} handleClick={handleTodoClick} onUpdate={updateAndReset} onDelete={handleDelete} />);
           })}
         </div>
         {displayModal && <Modal display={displayModal} formData={formData} handleSubmit={handleModalSubmit} />}
