@@ -7,7 +7,7 @@ export const ModalList = (props: ModalListProps) => {
   return (
     <ul>
       <li>
-        <Title title={props.data.title} handleChange={props.handleChange} />
+        <Title title={props.data.title || ""} handleChange={props.handleChange} />
       </li>
       <li>
         <DueDate
