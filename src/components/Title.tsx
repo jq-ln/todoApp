@@ -1,4 +1,7 @@
-export const Title = (props: any) => {
+import {TitleProps} from "../types";
+
+export const Title = (props: TitleProps) => {
+  console.log(props);
   return (
     <>
       <label htmlFor="title">Title</label>

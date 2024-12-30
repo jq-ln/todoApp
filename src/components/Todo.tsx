@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { TodoProps } from "../types";
+import { TodoProps, TodoType } from "../types";
 
 export const Todo = ((props: TodoProps) => {
   const [isChecked, setIsChecked] = useState(props.todo.completed);
-  const status = props.todo.completed ? "COMPLETED" : "PENDING";
 
   const isValidDate = (month: string, year: string) => {
     const validRegEx = /^[\d]+$/;
@@ -11,7 +10,7 @@ export const Todo = ((props: TodoProps) => {
     return validRegEx.test(month + year);
   }
 
-  const dueDate = (todo: any) => {
+  const dueDate = (todo: TodoType) => {
     if (isValidDate(todo.month, todo.year)) {
       return todo.month + "/" + todo.year.slice(-2);
     }
@@ -41,8 +40,8 @@ export const Todo = ((props: TodoProps) => {
         />
         <span className="check"></span>
       </label>
-      <label onClick={() => props.handleClick(props.todo)}>
-        <em >{status}</em> -- {props.todo.title} -- {dueDate(props.todo)} 
+      <label onClick={() => props.handleClick(props.todo)} className={isChecked ? "completed" : ""}>
+        {props.todo.title} -- {dueDate(props.todo)} 
       </label>
       <button className="delete" onClick={onDelete}>Delete</button>
     </div>

@@ -1,24 +1,16 @@
 import { SyntheticEvent, ChangeEvent } from "react";
 
-//--------------------------------------------------
-// => Todo Types
-//--------------------------------------------------
-
 export interface TodoType {
   id: number;
   title: string;
-  day?: string;
-  month?: string;
-  year?: string;
-  description?: string;
+  day: string;
+  month: string;
+  year: string;
+  description: string;
   completed: boolean;
 }
 
-//--------------------------------------------------
-// => Modal Types
-//--------------------------------------------------
-
-export type FormDataType = Omit<TodoType, "id">;
+export type FormDataType = Partial<TodoType>;
 
 type HandleChange = (event: ChangeEvent) => void;
 
@@ -29,7 +21,7 @@ interface IncludesChange {
 export interface ModalProps {
   display: boolean;
   formData: FormDataType;
-  handleSubmit: (todo: FormDataType | TodoType) => void;
+  handleSubmit: (todo: FormDataType) => void;
 }
 
 export interface ModalFormProps extends IncludesChange {

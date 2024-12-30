@@ -1,5 +1,5 @@
 import axios from "axios";
-import { TodoType, FormDataType } from "../types";
+import { FormDataType } from "../types";
 
 const baseUrl = "http://localhost:3000/api"
 
@@ -17,7 +17,7 @@ export const updateTodo = async (id: number, updateValues: Partial<FormDataType>
     });
 }
 
-export const addTodo = async (todo: TodoType) => {
+export const addTodo = async (todo: FormDataType) => {
   await axios.post(baseUrl + "/todos", todo)
 }
 

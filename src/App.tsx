@@ -16,7 +16,6 @@ const App = () => {
   }
 
   const [todos, setTodos] = useState<TodoType[]>([])
-  const [header, _setHeader] = useState<string>('All Todos')
   const [displayModal, setDisplayModal] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormDataType>(emptyFormData)
 
@@ -26,10 +25,6 @@ const App = () => {
     })();
   }, []);
 
-  //------------------------------------------------
-  // => HELPER FUNCTIONS
-  //------------------------------------------------
-
   const resetTodos = async () => {
     await getTodos()
       .then(todos => {
@@ -37,7 +32,7 @@ const App = () => {
       });
   }
 
-  const addAndReset = async (todo: TodoType) => {
+  const addAndReset = async (todo: FormDataType) => {
     addTodo(todo)
       .then(() => {
         resetTodos();
@@ -63,7 +58,11 @@ const App = () => {
   const handleModalSubmit = (todo: FormDataType) => {
     const allTodoIds = todos.map((todo: TodoType) => todo.id);
 
-    if (allTodoIds.includes(todo.id)) {
+    if (
+      "id" in todo                &&
+      typeof todo.id === "number" &&
+      allTodoIds.includes(todo.id)
+      ) {
       updateAndReset(todo.id, { ...todo });
     } else {
       addAndReset(todo);
@@ -83,13 +82,9 @@ const App = () => {
       });
   }
 
-  const pendingTodos: TodoType[] = todos.filter((todo: any) => !todo.completed )
-  const completedTodos: TodoType[] = todos.filter((todo: any) => todo.completed);
+  const pendingTodos: TodoType[] = todos.filter((todo: TodoType) => !todo.completed )
+  const completedTodos: TodoType[] = todos.filter((todo: TodoType) => todo.completed);
   const allTodos: TodoType[] = pendingTodos.concat(completedTodos);
-
-  //------------------------------------------------
-  // => Return
-  //------------------------------------------------
 
   return (
     <div className="container">
@@ -97,7 +92,7 @@ const App = () => {
       </div>
 
       <div className="content" onClick={handleModalClick}>
-        <h1>{header} <span className="count">{allTodos.length}</span></h1>
+        <h1>All Todos <span className="count">{allTodos.length}</span></h1>
         <div className="add">
           <a href="#" onClick={() => handleTodoClick(emptyFormData)}>
             <span className="plus"></span>
@@ -106,7 +101,7 @@ const App = () => {
           <hr/>
         </div>
         <div className="todos">
-          {allTodos.map((todo: any) => {
+          {allTodos.map((todo: TodoType) => {
             return (<Todo key={todo.id} todo={todo} handleClick={handleTodoClick} onUpdate={updateAndReset} onDelete={handleDelete} />);
           })}
         </div>
